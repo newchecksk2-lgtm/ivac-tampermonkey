@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IVAC Uploading Update ALL 26.09.26
 // @namespace    ivac-helper
-// @version      2.1
+// @version      2.2
 // @match        https://appointment.ivacbd.com/*
 // @grant        none
 // @run-at       document-end
