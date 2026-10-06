@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IVAC Uploading Update ALL 26.09.26
 // @namespace    ivac-helper
-// @version      2.2
+// @version      2.3
 // @downloadURL  https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
 // @updateURL    https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
 // @match        https://appointment.ivacbd.com/*
@@ -11,7 +11,7 @@
 
 (function () {
     'use strict';
-
+console.log("AUTO UPDATE TEST 2.3");
     // ==========================================
     // ACCOUNT
     // ==========================================
