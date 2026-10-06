@@ -2,6 +2,8 @@
 // @name         IVAC Uploading Update ALL 26.09.26
 // @namespace    ivac-helper
 // @version      2.2
+// @downloadURL  https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
+// @updateURL    https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
 // @match        https://appointment.ivacbd.com/*
 // @grant        none
 // @run-at       document-end
