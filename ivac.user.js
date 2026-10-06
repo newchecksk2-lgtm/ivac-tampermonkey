@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IVAC NORMAL AUTOMATION
 // @namespace    ivac-helper
-// @version      2.3
+// @version      2.4
 // @description  IVAC automation
 // @match        https://appointment.ivacbd.com/*
 // @updateURL    https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
@@ -12,7 +12,7 @@
 
 (function () {
     'use strict';
-console.log("AUTO UPDATE TEST 2.3");
+console.log("AUTO UPDATE TEST 2.4");
     // ==========================================
     // ACCOUNT
     // ==========================================
