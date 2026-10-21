@@ -17,7 +17,7 @@ console.log("AUTO UPDATE TEST 2.3");
     // ACCOUNT
     // ==========================================
     const MOBILE = "check";
-    const PASSWORD = "fsadfsf@#";
+    const PASSWORD = "password@#";
 
     // ==========================================
     // IVAC LOCATION
