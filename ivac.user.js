@@ -16,7 +16,7 @@ console.log("AUTO UPDATE TEST 2.3");
     // ==========================================
     // ACCOUNT
     // ==========================================
-    const MOBILE = "sadfsadf";
+    const MOBILE = "check";
     const PASSWORD = "fsadfsf@#";
 
     // ==========================================
