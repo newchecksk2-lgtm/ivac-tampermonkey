@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         IVAC NORMAL+AUTOMATIC  AUTOMATIONLAST SCRIPT
+// @name         IVAC WORKING SCRIPT 13-10-26 this is real
 // @namespace    ivac-helper
 // @version      2.3
-// @description  IVAC automation
+// @description  IVAC automation WORKING
 // @match        https://appointment.ivacbd.com/*
 // @updateURL    https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
 // @downloadURL  https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
@@ -16,8 +16,8 @@ console.log("AUTO UPDATE TEST 2.3");
     // ==========================================
     // ACCOUNT
     // ==========================================
-    const MOBILE = "01790590810";
-    const PASSWORD = "Saykot1122@#";
+    const MOBILE = "sadfsadf";
+    const PASSWORD = "fsadfsf@#";
 
     // ==========================================
     // IVAC LOCATION
@@ -449,7 +449,7 @@ if (!tokenForThisUpload) {
                             tokenForThisUpload,
 
                         "x-sec-runtime-state":
-                            "v1.5a4c8831.9a53.47ed.b579.042a2c0cee5a"
+                            "v3.5s4c8831.9a53.27ed.b579.042a2c0cee5a"
                     },
 
                     body: formData
@@ -646,6 +646,88 @@ return {
         }
     }
 
+
+    // ==========================================
+    // FILE OVERVIEW API — over_view-v5
+    // ==========================================
+    async function sendFileOverviewRequest() {
+        const status = document.getElementById(
+            "fileOverviewStatus"
+        );
+        const btn = document.getElementById(
+            "sendFileOverviewBtn"
+        );
+
+        try {
+            const accessToken = getAccessToken();
+
+            if (status) {
+                status.innerText = "SENDING...";
+                status.style.color = "#ffd166";
+            }
+
+            if (btn) btn.disabled = true;
+
+            console.log("📤 Sending File Overview request...");
+
+            const response = await fetch(
+                "https://api.ivacbd.com/iams/api/v1/file/over_view-v5",
+                {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json, text/plain, */*",
+                        "Authorization": `Bearer ${accessToken}`,
+                        "Cache-Control": "no-cache, no-store, must-revalidate",
+                        "Pragma": "no-cache"
+                    }
+                    // Intentionally no body: captured request has none.
+                }
+            );
+
+            const responseText = await response.text();
+
+            console.log(
+                "📡 File Overview status:",
+                response.status
+            );
+            console.log(
+                "📥 File Overview response:",
+                responseText
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `File Overview failed (${response.status}): ${
+                        responseText || "No response body"
+                    }`
+                );
+            }
+
+            if (status) {
+                status.innerText = `SUCCESS (${response.status})`;
+                status.style.color = "#20e58a";
+            }
+
+            return {
+                status: response.status,
+                response: responseText
+            };
+
+        } catch (error) {
+            console.error("❌ File Overview error:", error);
+
+            if (status) {
+                status.innerText = `FAILED: ${error.message}`;
+                status.style.color = "#ff5969";
+            }
+
+            throw error;
+
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+    }
+
     // ==========================================
     // APPOINTMENT API
     // ==========================================
@@ -763,9 +845,7 @@ return {
             ?.click();
     }
 
-    // ==========================================
-    // TAKE APPOINTMENT
-    // ==========================================
+
     // ==========================================
     // TAKE APPOINTMENT
     // ==========================================
@@ -1505,11 +1585,14 @@ function autoVerifyOTP() {
 
 <!-- HEADER -->
 
+
 <div
     id="retryHeader"
     style="
         position:relative;
-        padding:18px 20px;
+        padding:12px;
+        box-sizing:border-box;
+        width:100%;
         background:
             linear-gradient(
                 135deg,
@@ -1522,13 +1605,20 @@ function autoVerifyOTP() {
     "
 >
 
+
+
 <div
     style="
         display:flex;
         align-items:center;
         justify-content:space-between;
+        gap:8px;
+        width:100%;
+        min-width:0;
+        box-sizing:border-box;
     "
 >
+
 
 <div
     style="
@@ -1562,7 +1652,7 @@ function autoVerifyOTP() {
         letter-spacing:.2px;
     "
 >
-Retry Control
+Task Manager
 </div>
 
 <div
@@ -1572,7 +1662,7 @@ Retry Control
         opacity:.82;
     "
 >
-Appointment Automation
+Retry Automation
 </div>
 
 <div
@@ -1602,6 +1692,8 @@ CAPTCHA Pool: 0/5
         background:rgba(0,0,0,.18);
         font-size:10px;
         font-weight:700;
+flex-shrink: 0;
+min-width: 0;
     "
 >
 
@@ -1619,6 +1711,22 @@ CAPTCHA Pool: 0/5
 IDLE
 </span>
 
+<span
+    id="retryMiniCountdown"
+    style="
+        display:none;
+        padding:4px 7px;
+        border-radius:6px;
+        background:rgba(0,0,0,.28);
+        color:#fff;
+        font-size:10px;
+        font-weight:800;
+        white-space:nowrap;
+    "
+>
+RETRY 0s
+</span>
+
 <button
     id="retryMinimize"
     type="button"
@@ -1633,6 +1741,10 @@ IDLE
         cursor:pointer;
         font-size:16px;
         font-weight:700;
+        flex: 0 0 28px;
+min-width: 28px;
+position: relative;
+z-index: 10;
     "
 >
 −
@@ -2259,6 +2371,50 @@ READY
 ⚙️ SEND BOOKING CONFIG
 </button>
 
+</div>
+
+<!-- FILE OVERVIEW API -->
+
+<div style="
+    padding:14px 15px;
+    border-radius:14px;
+    background:rgba(20,38,60,.72);
+    border:1px solid rgba(120,160,200,.13);
+    margin-bottom:12px;
+">
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:10px;
+    ">
+        <strong style="font-size:13px;">
+            📂 File Overview API
+        </strong>
+
+        <span id="fileOverviewStatus"
+              style="font-size:10px;color:#8fa8c4;">
+            READY
+        </span>
+    </div>
+
+    <button
+        id="sendFileOverviewBtn"
+        type="button"
+        style="
+            width:100%;
+            border:none;
+            border-radius:10px;
+            padding:11px;
+            cursor:pointer;
+            color:#fff;
+            background:linear-gradient(135deg,#14a879,#087857);
+            font-weight:800;
+            font-size:12px;
+        "
+    >
+        📂 SEND FILE OVERVIEW
+    </button>
 </div>
 
 <!-- CONTROLS -->
@@ -3821,107 +3977,106 @@ async function setupUploadSystem() {
     });
 
 
+
     // ======================================
-    // UPLOAD ALL
+    // UPLOAD ALL — MANUAL + AUTO SAFE
+    // Works even when AUTO_MODE is OFF
     // ======================================
     if (uploadAllBtn) {
+        uploadAllBtn.addEventListener("click", async function () {
 
-        uploadAllBtn.addEventListener(
-            "click",
-            async function () {
+            if (uploadFlowBusy) {
+                console.warn("⚠️ An upload flow is already running.");
+                return;
+            }
 
-                if (uploadFlowBusy) {
-                    return;
-                }
+            const selectedRows = uploadRows
+                .filter(row => row.input?.files?.[0])
+                .sort((a, b) => a.index - b.index);
 
+            if (!selectedRows.length) {
+                uploadAllBtn.textContent = "⚠️ SELECT FILES FIRST";
+                setTimeout(() => {
+                    uploadAllBtn.textContent = "⬆ UPLOAD ALL";
+                }, 1800);
+                return;
+            }
 
-                /*
-                 * UPLOAD ALL requires AUTO_MODE
-                 * because runAutoUploadFlow()
-                 * uses the automatic flow.
-                 */
+            console.log(
+                `📤 MANUAL UPLOAD ALL: ${selectedRows.length} selected file(s)`
+            );
 
-                if (!AUTO_MODE) {
+            uploadFlowBusy = true;
+            uploadAllBtn.disabled = true;
+            uploadAllBtn.textContent = "⏳ UPLOADING FILES...";
 
-                    console.warn(
-                        "⚠️ AUTO MODE is OFF"
-                    );
+            try {
+                let allSucceeded = true;
 
-                    uploadAllBtn.textContent =
-                        "⚠️ START AUTO FIRST";
+                // Upload in order: Primary first, then supporting files.
+                for (const row of selectedRows) {
 
-                    setTimeout(() => {
-
-                        uploadAllBtn.textContent =
-                            "⬆ UPLOAD ALL";
-
-                    }, 1500);
-
-                    return;
-                }
-
-
-                console.log(
-                    "🚀 UPLOAD ALL clicked"
-                );
-
-
-                uploadAllBtn.disabled = true;
-
-                uploadAllBtn.textContent =
-                    "⏳ UPLOAD FLOW...";
-
-
-                try {
-
-                    const success =
-                        await runAutoUploadFlow();
-
-
-                    if (success) {
-
-                        uploadAllBtn.textContent =
-                            "✓ FLOW COMPLETE";
-
-                    } else {
-
-                        uploadAllBtn.textContent =
-                            "⚠️ CHECK FAILED FILES";
+                    // Skip files already uploaded successfully.
+                    if (row.status?.dataset.uploaded === "1") {
+                        continue;
                     }
 
+                    let success = await uploadFileRow(row);
 
-                } catch (error) {
+                    // One manual retry for a failed upload.
+                    if (!success) {
+                        console.warn(
+                            `🔁 Retrying File ${row.index} once...`
+                        );
 
-                    console.error(
-                        "UPLOAD ALL ERROR:",
-                        error
-                    );
+                        await sleep(800);
+                        success = await uploadFileRow(row);
+                    }
 
-
-                    uploadAllBtn.textContent =
-                        "❌ UPLOAD ERROR";
-
-
-                } finally {
-
-                    uploadAllBtn.disabled = false;
-
-
-                    updateUploadCount();
-                    updateCaptchaPoolUI();
-
-
-                    setTimeout(() => {
-
-                        uploadAllBtn.textContent =
-                            "⬆ UPLOAD ALL";
-
-                    }, 2000);
+                    if (!success) {
+                        allSucceeded = false;
+                        console.error(
+                            `❌ File ${row.index} failed.`
+                        );
+                    }
                 }
-            }
-        );
-    }
 
+                updateUploadCount();
+                updateCaptchaPoolUI();
+
+                const remaining = selectedRows.filter(
+                    row => row.status?.dataset.uploaded !== "1"
+                );
+
+                if (allSucceeded && remaining.length === 0) {
+                    uploadAllBtn.textContent = "✓ ALL SELECTED FILES UPLOADED";
+                    console.log("✅ Manual Upload All completed.");
+                } else {
+                    uploadAllBtn.textContent =
+                        `⚠️ ${remaining.length} FILE(S) NEED ATTENTION`;
+                    console.warn(
+                        "⚠️ Some files were not uploaded successfully.",
+                        remaining.map(row => row.index)
+                    );
+                }
+
+            } catch (error) {
+                console.error("❌ MANUAL UPLOAD ALL ERROR:", error);
+                uploadAllBtn.textContent = "❌ UPLOAD ERROR";
+
+            } finally {
+                uploadFlowBusy = false;
+                uploadAllBtn.disabled = false;
+
+                updateUploadCount();
+                updateCaptchaPoolUI();
+
+                setTimeout(() => {
+                    uploadAllBtn.textContent = "⬆ UPLOAD ALL";
+                }, 2500);
+            }
+        });
+    }
 
     // ======================================
     // RESTORE SAVED FILES
@@ -4036,6 +4191,21 @@ const bookingBtn =
     document.getElementById(
         "sendBookingConfigBtn"
     );
+
+const fileOverviewBtn = document.getElementById(
+    "sendFileOverviewBtn"
+);
+
+if (fileOverviewBtn) {
+    fileOverviewBtn.addEventListener("click", async () => {
+        try {
+            await sendFileOverviewRequest();
+        } catch (error) {
+            // Error is already displayed in the status field.
+        }
+    });
+}
+
 
 // ======================================
 // AUTO REDIRECT TO TIME-SLOT
@@ -4346,63 +4516,88 @@ if (AUTO_REDIRECT_TIME_SLOT) {
                 };
         }
 
+
+
         // ======================================
-        // MINIMIZE
+        // MINIMIZE / EXPAND
         // ======================================
         const minimizeBtn =
-            document.getElementById(
-                "retryMinimize"
-            );
+            document.getElementById("retryMinimize");
 
         const panelBody =
-            document.getElementById(
-                "retryPanelBody"
-            );
+            document.getElementById("retryPanelBody");
 
         const panel =
-            document.getElementById(
-                "retryPanel"
-            );
+            document.getElementById("retryPanel");
 
-        if (
-            minimizeBtn &&
-            panelBody &&
-            panel
-        ) {
+        const miniCountdown =
+            document.getElementById("retryMiniCountdown");
 
-            minimizeBtn.onclick =
-                function (e) {
+        if (minimizeBtn && panelBody && panel) {
 
-                    e.stopPropagation();
+            // Keep the button visible in the header
 
-                    if (
-                        panelBody.style.display ===
-                        "none"
-                    ) {
+minimizeBtn.style.display = "inline-flex";
+minimizeBtn.style.flex = "0 0 30px";
+minimizeBtn.style.width = "30px";
+minimizeBtn.style.minWidth = "30px";
+minimizeBtn.style.height = "28px";
+minimizeBtn.style.alignItems = "center";
+minimizeBtn.style.justifyContent = "center";
+minimizeBtn.style.position = "relative";
+minimizeBtn.style.zIndex = "99999";
+minimizeBtn.style.visibility = "visible";
+minimizeBtn.style.opacity = "1";
 
-                        panelBody.style.display =
-                            "block";
 
-                        minimizeBtn.innerText =
-                            "−";
+            minimizeBtn.onclick = function (e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-                        panel.style.width =
-                            "330px";
+                const isCurrentlyMinimized =
+                    panelBody.style.display === "none";
 
-                    } else {
+                if (isCurrentlyMinimized) {
 
-                        panelBody.style.display =
-                            "none";
+                    // EXPAND PANEL
+                    panelBody.style.display = "block";
+                    minimizeBtn.innerText = "−";
+                    minimizeBtn.title = "Minimize panel";
+                    panel.style.width = "330px";
 
-                        minimizeBtn.innerText =
-                            "+";
-
-                        panel.style.width =
-                            "230px";
+                    if (miniCountdown) {
+                        miniCountdown.style.display = "none";
                     }
-                };
+
+                } else {
+
+                    // MINIMIZE PANEL
+                    panelBody.style.display = "none";
+                    minimizeBtn.innerText = "+";
+                    minimizeBtn.title = "Maximize panel";
+                    panel.style.width = "300px";
+panel.style.minWidth = "300px";
+
+
+if (miniCountdown) {
+    miniCountdown.style.display =
+        retryTimer !== null ? "inline-block" : "none";
+
+    miniCountdown.style.flex = "0 0 auto";
+    miniCountdown.style.flexShrink = "0";
+    miniCountdown.style.fontSize = "18px";
+    miniCountdown.style.fontWeight = "800";
+    miniCountdown.style.padding = "4px 6px";
+    miniCountdown.style.minWidth = "42px";
+    miniCountdown.style.textAlign = "center";
+    miniCountdown.style.whiteSpace = "nowrap";
+    miniCountdown.style.color = "#5cff9d";
+}
+
+                }
+            };
         }
-    }
+    } // END setupPanelEvents()
 
     // ==========================================
     // DATE SWITCH UI
@@ -4627,6 +4822,31 @@ if (AUTO_REDIRECT_TIME_SLOT) {
             setInterval(() => {
 
                 retryRemaining--;
+                document.getElementById("retryCountdown").innerHTML =
+        `${retryRemaining} sec`;
+
+    // NEW: Update countdown in the minimized header
+
+const miniCountdown =
+    document.getElementById("retryMiniCountdown");
+
+const panelBody =
+    document.getElementById("retryPanelBody");
+
+const isMinimized =
+    panelBody &&
+    panelBody.style.display === "none";
+
+if (miniCountdown) {
+    miniCountdown.style.display =
+        isMinimized && retryTimer !== null
+            ? "inline-block"
+            : "none";
+
+miniCountdown.textContent =
+    `${Math.max(0, retryRemaining)}s`;
+}
+
 
                 if (
                     retryRemaining < 0
@@ -4774,6 +4994,14 @@ if (AUTO_REDIRECT_TIME_SLOT) {
         retryCountdownTimer = null;
 
         retryRemaining = 0;
+
+const miniCountdown =
+    document.getElementById("retryMiniCountdown");
+
+if (miniCountdown) {
+    miniCountdown.style.display = "none";
+}
+
 
         const countdown =
             document.getElementById(
@@ -4994,14 +5222,31 @@ const verifyBtn =
         )
     );
 
-// Login / OTP screen still active
+
+function isElementVisible(el) {
+    if (!el || !el.isConnected) {
+        return false;
+    }
+
+    const style = window.getComputedStyle(el);
+
+    return (
+        el.getClientRects().length > 0 &&
+        style.display !== "none" &&
+        style.visibility !== "hidden" &&
+        style.opacity !== "0"
+    );
+}
+
+// Login / OTP screen is active only if visible
 if (
-    loginScreen ||
-    passwordScreen ||
-    verifyBtn
+    isElementVisible(loginScreen) ||
+    isElementVisible(passwordScreen) ||
+    isElementVisible(verifyBtn)
 ) {
     return;
 }
+
 
 // ======================================
 // WAIT FOR APPOINTMENT BUTTON
