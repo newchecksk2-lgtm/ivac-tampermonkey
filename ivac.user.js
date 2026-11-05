@@ -437,7 +437,7 @@ if (!tokenForThisUpload) {
 
         const response =
             await fetch(
-                "https://api.ivacbd.com/iams/api/v1/file/upload-file_v5",
+                "https://api.ivacbd.com/iams/api/v1/file/upload_file_v1",
                 {
                     method: "POST",
 
