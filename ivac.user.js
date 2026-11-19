@@ -3,7 +3,7 @@
 // @namespace    ivac-helper
 // @version      2.3
 // @description  IVAC automation WORKING
-// @match        https://appointment.ivacbd.com/*
+// @match        https:///uploadappointment.ivacbd.com/*
 // @updateURL    https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
 // @downloadURL  https://raw.githubusercontent.com/newchecksk2-lgtm/ivac-tampermonkey/main/ivac.user.js
 // @grant        none
@@ -437,7 +437,7 @@ if (!tokenForThisUpload) {
 
         const response =
             await fetch(
-                "https://api.ivacbd.com/iams/api/v1/file/upload_file_v1",
+                "https://api.ivacbd.com/iams/api/v1/file/upload_file_v2",
                 {
                     method: "POST",
 
